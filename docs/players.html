@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Players — FPL Report</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="brand-logo">FPL</span>
+        <span class="brand-sub">Report</span>
+      </div>
+      <div class="header-meta">
+        <span class="badge badge-mock">Mock data</span>
+        <span class="meta-info">GW37 · 2026-06-11</span>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="index.html" class="nav-link">Overview</a>
+<a href="players.html" class="nav-link active">Players</a>
+<a href="teams.html" class="nav-link">Teams</a>
+<a href="fixtures.html" class="nav-link">Fixtures</a>
+<a href="gameweek.html" class="nav-link">Gameweek</a>
+<a href="wildcard.html" class="nav-link">Wildcard</a>
+    </nav>
+  </header>
+  <main class="site-main">
+    
+    <div class="page-header">
+      <h1>Players</h1>
+      <p class="page-desc">Full player stats. Filter by position, sort any column, or compare two players head-to-head.</p>
+    </div>
+
+    <section class="card comparison-card">
+      <h2>Player comparison</h2>
+      <div class="compare-selects">
+        <div class="compare-col">
+          <label for="player-a">Player A</label>
+          <select id="player-a"><option value="12">Haaland (MCI) — £14.2m</option><option value="9">Salah (LIV) — £12.9m</option><option value="11">Palmer (CHE) — £10.5m</option><option value="7">Foden (MCI) — £8.8m</option><option value="10">Saka (ARS) — £10.0m</option><option value="8">Odegaard (ARS) — £8.6m</option><option value="13">Watkins (AVL) — £9.0m</option><option value="3">T.Alexander-Arnold (LIV) — £7.4m</option><option value="14">Isak (NEW) — £8.5m</option><option value="4">Trippier (NEW) — £6.9m</option><option value="1">Raya (ARS) — £5.5m</option><option value="18">B.Fernandes (MUN) — £8.2m</option><option value="2">Alisson (LIV) — £5.7m</option><option value="15">Solanke (BOU) — £7.5m</option><option value="5">White (ARS) — £6.2m</option><option value="6">Van Dijk (LIV) — £6.5m</option><option value="19">Maddison (TOT) — £7.8m</option><option value="20">Trossard (ARS) — £7.2m</option><option value="16">Porro (TOT) — £5.6m</option><option value="21">Jota (LIV) — £7.6m</option><option value="17">James (CHE) — £5.8m</option><option value="22">Toney (BRE) — £6.8m</option></select>
+        </div>
+        <div class="compare-vs">vs</div>
+        <div class="compare-col">
+          <label for="player-b">Player B</label>
+          <select id="player-b"><option value="12">Haaland (MCI) — £14.2m</option><option value="9">Salah (LIV) — £12.9m</option><option value="11">Palmer (CHE) — £10.5m</option><option value="7">Foden (MCI) — £8.8m</option><option value="10">Saka (ARS) — £10.0m</option><option value="8">Odegaard (ARS) — £8.6m</option><option value="13">Watkins (AVL) — £9.0m</option><option value="3">T.Alexander-Arnold (LIV) — £7.4m</option><option value="14">Isak (NEW) — £8.5m</option><option value="4">Trippier (NEW) — £6.9m</option><option value="1">Raya (ARS) — £5.5m</option><option value="18">B.Fernandes (MUN) — £8.2m</option><option value="2">Alisson (LIV) — £5.7m</option><option value="15">Solanke (BOU) — £7.5m</option><option value="5">White (ARS) — £6.2m</option><option value="6">Van Dijk (LIV) — £6.5m</option><option value="19">Maddison (TOT) — £7.8m</option><option value="20">Trossard (ARS) — £7.2m</option><option value="16">Porro (TOT) — £5.6m</option><option value="21">Jota (LIV) — £7.6m</option><option value="17">James (CHE) — £5.8m</option><option value="22">Toney (BRE) — £6.8m</option></select>
+        </div>
+      </div>
+      <div id="comparison-result" class="comparison-result"></div>
+    </section>
+
+    <section class="card">
+      <div class="table-controls">
+        <h2>All players</h2>
+        <div class="filter-group">
+          <button class="filter-btn active" data-filter="0">All</button>
+          <button class="filter-btn" data-filter="1">GKP</button>
+          <button class="filter-btn" data-filter="2">DEF</button>
+          <button class="filter-btn" data-filter="3">MID</button>
+          <button class="filter-btn" data-filter="4">FWD</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table sortable" id="players-table">
+          <thead>
+            <tr>
+              <th>Player</th><th>Team</th><th>Cost</th><th>Pts</th>
+              <th>Form</th><th>PPG</th><th>G</th><th>A</th><th>CS</th><th>Sel%</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr data-pos="4" data-team="13">
+          <td class="player-name">
+            <span class="name">Haaland</span>
+            <span class="pos-badge pos-4">FWD</span>
+          </td>
+          <td>MCI</td>
+          <td>£14.2m</td>
+          <td>260</td>
+          <td>9.2</td>
+          <td>7.8</td>
+          <td>27</td>
+          <td>5</td>
+          <td>10</td>
+          <td>56.4%</td>
+        </tr>
+        <tr data-pos="3" data-team="11">
+          <td class="player-name">
+            <span class="name">Salah</span>
+            <span class="pos-badge pos-3">MID</span>
+          </td>
+          <td>LIV</td>
+          <td>£12.9m</td>
+          <td>244</td>
+          <td>8.8</td>
+          <td>7.2</td>
+          <td>18</td>
+          <td>12</td>
+          <td>14</td>
+          <td>52.8%</td>
+        </tr>
+        <tr data-pos="3" data-team="7">
+          <td class="player-name">
+            <span class="name">Palmer</span>
+            <span class="pos-badge pos-3">MID</span>
+          </td>
+          <td>CHE</td>
+          <td>£10.5m</td>
+          <td>238</td>
+          <td>8.6</td>
+          <td>7.0</td>
+          <td>20</td>
+          <td>10</td>
+          <td>8</td>
+          <td>47.3%</td>
+        </tr>
+        <tr data-pos="3" data-team="13">
+          <td class="player-name">
+            <span class="name">Foden</span>
+            <span class="pos-badge pos-3">MID</span>
+          </td>
+          <td>MCI</td>
+          <td>£8.8m</td>
+          <td>228</td>
+          <td>8.4</td>
+          <td>6.8</td>
+          <td>17</td>
+          <td>8</td>
+          <td>10</td>
+          <td>38.2%</td>
+        </tr>
+        <tr data-pos="3" data-team="1">
+          <td class="player-name">
+            <span class="name">Saka</span>
+            <span class="pos-badge pos-3">MID</span>
+          </td>
+          <td>ARS</td>
+          <td>£10.0m</td>
+          <td>222</td>
+          <td>8.0</td>
+          <td>6.6</td>
+          <td>15</td>
+          <td>14</td>
+          <td>16</td>
+          <td>44.1%</td>
+        </tr>
+        <tr data-pos="3" data-team="1">
+          <td class="player-name">
+            <span class="name">Odegaard</span>
+            <span class="pos-badge pos-3">MID</span>
+          </td>
+          <td>ARS</td>
+          <td>£8.6m</td>
+          <td>214</td>
+          <td>7.6</td>
+          <td>6.4</td>
+          <td>13</td>
+          <td>11</td>
+          <td>16</td>
+          <td>31.5%</td>
+        </tr>
+        <tr data-pos="4" data-team="2">
+          <td class="player-name">
+            <span class="name">Watkins</span>
+            <span class="pos-badge pos-4">FWD</span>
+          </td>
+          <td>AVL</td>
+          <td>£9.0m</td>
+          <td>212</td>
+          <td>7.8</td>
+          <td>6.4</td>
+          <td>19</td>
+          <td>10</td>
+          <td>8</td>
+          <td>35.7%</td>
+        </tr>
+        <tr data-pos="2" data-team="11">
+          <td class="player-name">
+            <span class="name">T.Alexander-Arnold</span>
+            <span class="pos-badge pos-2">DEF</span>
+          </td>
+          <td>LIV</td>
+          <td>£7.4m</td>
+          <td>198</td>
+          <td>7.1</td>
+          <td>5.8</td>
+          <td>3</td>
+          <td>11</td>
+          <td>14</td>
+          <td>41.3%</td>
+        </tr>
+        <tr data-pos="4" data-team="15">
+          <td class="player-name">
+            <span class="name">Isak</span>
+            <span class="pos-badge pos-4">FWD</span>
+          </td>
+          <td>NEW</td>
+          <td>£8.5m</td>
+          <td>196</td>
+          <td>7.2</td>
+          <td>6.0</td>
+          <td>21</td>
+          <td>3</td>
+          <td>12</td>
+          <td>28.4%</td>
+        </tr>
+        <tr data-pos="2" data-team="15">
+          <td class="player-name">
+            <span class="name">Trippier</span>
+            <span class="pos-badge pos-2">DEF</span>
+          </td>
+          <td>NEW</td>
+          <td>£6.9m</td>
+          <td>176</td>
+          <td>5.4</td>
+          <td>5.2</td>
+          <td>2</td>
+          <td>9</td>
+          <td>12</td>
+          <td>29.8%</td>
+        </tr>
+        <tr data-pos="1" data-team="1">
+          <td class="player-name">
+            <span class="name">Raya</span>
+            <span class="pos-badge pos-1">GKP</span>
+          </td>
+          <td>ARS</td>
+          <td>£5.5m</td>
+          <td>168</td>
+          <td>6.2</td>
+          <td>4.9</td>
+          <td>0</td>
+          <td>0</td>
+          <td>16</td>
+          <td>24.5%</td>
+        </tr>
+        <tr data-pos="3" data-team="14">
+          <td class="player-name">
+            <span class="name">B.Fernandes</span>
+            <span class="pos-badge pos-3">MID</span>
+          </td>
+          <td>MUN</td>
+          <td>£8.2m</td>
+          <td>168</td>
+          <td>5.8</td>
+          <td>5.0</td>
+          <td>8</td>
+          <td>9</td>
+          <td>6</td>
+          <td>18.6%</td>
+        </tr>
+        <tr data-pos="1" data-team="11">
+          <td class="player-name">
+            <span class="name">Alisson</span>
+            <span class="pos-badge pos-1">GKP</span>
+          </td>
+          <td>LIV</td>
+          <td>£5.7m</td>
+          <td>162</td>
+          <td>5.8</td>
+          <td>4.7</td>
+          <td>0</td>
+          <td>1</td>
+          <td>14</td>
+          <td>19.2%</td>
+        </tr>
+        <tr data-pos="4" data-team="3">
+          <td class="player-name">
+            <span class="name">Solanke</span>
+            <span class="pos-badge pos-4">FWD</span>
+          </td>
+          <td>BOU</td>
+          <td>£7.5m</td>
+          <td>162</td>
+          <td>5.8</td>
+          <td>4.9</td>
+          <td>15</td>
+          <td>4</td>
+          <td>4</td>
+          <td>12.3%</td>
+        </tr>
+        <tr data-pos="2" data-team="1">
+          <td class="player-name">
+            <span class="name">White</span>
+            <span class="pos-badge pos-2">DEF</span>
+          </td>
+          <td>ARS</td>
+          <td>£6.2m</td>
+          <td>154</td>
+          <td>5.0</td>
+          <td>4.6</td>
+          <td>1</td>
+          <td>5</td>
+          <td>16</td>
+          <td>18.4%</td>
+        </tr>
+        <tr data-pos="2" data-team="11">
+          <td class="player-name">
+            <span class="name">Van Dijk</span>
+            <span class="pos-badge pos-2">DEF</span>
+          </td>
+          <td>LIV</td>
+          <td>£6.5m</td>
+          <td>148</td>
+          <td>4.8</td>
+          <td>4.4</td>
+          <td>4</td>
+          <td>2</td>
+          <td>14</td>
+          <td>15.1%</td>
+        </tr>
+        <tr data-pos="3" data-team="18">
+          <td class="player-name">
+            <span class="name">Maddison</span>
+            <span class="pos-badge pos-3">MID</span>
+          </td>
+          <td>TOT</td>
+          <td>£7.8m</td>
+          <td>144</td>
+          <td>4.8</td>
+          <td>4.6</td>
+          <td>7</td>
+          <td>10</td>
+          <td>10</td>
+          <td>12.3%</td>
+        </tr>
+        <tr data-pos="3" data-team="1">
+          <td class="player-name">
+            <span class="name">Trossard</span>
+            <span class="pos-badge pos-3">MID</span>
+          </td>
+          <td>ARS</td>
+          <td>£7.2m</td>
+          <td>140</td>
+          <td>4.6</td>
+          <td>4.4</td>
+          <td>9</td>
+          <td>5</td>
+          <td>16</td>
+          <td>10.8%</td>
+        </tr>
+        <tr data-pos="2" data-team="18">
+          <td class="player-name">
+            <span class="name">Porro</span>
+            <span class="pos-badge pos-2">DEF</span>
+          </td>
+          <td>TOT</td>
+          <td>£5.6m</td>
+          <td>138</td>
+          <td>4.6</td>
+          <td>4.1</td>
+          <td>2</td>
+          <td>6</td>
+          <td>10</td>
+          <td>14.2%</td>
+        </tr>
+        <tr data-pos="4" data-team="11">
+          <td class="player-name">
+            <span class="name">Jota</span>
+            <span class="pos-badge pos-4">FWD</span>
+          </td>
+          <td>LIV</td>
+          <td>£7.6m</td>
+          <td>134</td>
+          <td>4.6</td>
+          <td>4.8</td>
+          <td>12</td>
+          <td>2</td>
+          <td>4</td>
+          <td>9.4%</td>
+        </tr>
+        <tr data-pos="2" data-team="7">
+          <td class="player-name">
+            <span class="name">James</span>
+            <span class="pos-badge pos-2">DEF</span>
+          </td>
+          <td>CHE</td>
+          <td>£5.8m</td>
+          <td>88</td>
+          <td>3.2</td>
+          <td>3.8</td>
+          <td>0</td>
+          <td>3</td>
+          <td>5</td>
+          <td>8.1%</td>
+        </tr>
+        <tr data-pos="4" data-team="4">
+          <td class="player-name">
+            <span class="name">Toney</span>
+            <span class="pos-badge pos-4">FWD</span>
+          </td>
+          <td>BRE</td>
+          <td>£6.8m</td>
+          <td>82</td>
+          <td>3.4</td>
+          <td>4.1</td>
+          <td>7</td>
+          <td>2</td>
+          <td>2</td>
+          <td>5.2%</td>
+        </tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <script>
+    const PLAYERS = {"1": {"name": "Raya", "team": "Arsenal", "position": "GKP", "cost": "\u00a35.5m", "total_points": 168, "form": "6.2", "points_per_game": "4.9", "goals_scored": 0, "assists": 0, "clean_sheets": 16, "minutes": 3060, "selected_by_percent": "24.5", "bonus": 18}, "2": {"name": "Alisson", "team": "Liverpool", "position": "GKP", "cost": "\u00a35.7m", "total_points": 162, "form": "5.8", "points_per_game": "4.7", "goals_scored": 0, "assists": 1, "clean_sheets": 14, "minutes": 2970, "selected_by_percent": "19.2", "bonus": 14}, "3": {"name": "T.Alexander-Arnold", "team": "Liverpool", "position": "DEF", "cost": "\u00a37.4m", "total_points": 198, "form": "7.1", "points_per_game": "5.8", "goals_scored": 3, "assists": 11, "clean_sheets": 14, "minutes": 2880, "selected_by_percent": "41.3", "bonus": 28}, "4": {"name": "Trippier", "team": "Newcastle", "position": "DEF", "cost": "\u00a36.9m", "total_points": 176, "form": "5.4", "points_per_game": "5.2", "goals_scored": 2, "assists": 9, "clean_sheets": 12, "minutes": 2790, "selected_by_percent": "29.8", "bonus": 22}, "5": {"name": "White", "team": "Arsenal", "position": "DEF", "cost": "\u00a36.2m", "total_points": 154, "form": "5.0", "points_per_game": "4.6", "goals_scored": 1, "assists": 5, "clean_sheets": 16, "minutes": 2700, "selected_by_percent": "18.4", "bonus": 16}, "6": {"name": "Van Dijk", "team": "Liverpool", "position": "DEF", "cost": "\u00a36.5m", "total_points": 148, "form": "4.8", "points_per_game": "4.4", "goals_scored": 4, "assists": 2, "clean_sheets": 14, "minutes": 3060, "selected_by_percent": "15.1", "bonus": 20}, "7": {"name": "Foden", "team": "Man City", "position": "MID", "cost": "\u00a38.8m", "total_points": 228, "form": "8.4", "points_per_game": "6.8", "goals_scored": 17, "assists": 8, "clean_sheets": 10, "minutes": 2700, "selected_by_percent": "38.2", "bonus": 42}, "8": {"name": "Odegaard", "team": "Arsenal", "position": "MID", "cost": "\u00a38.6m", "total_points": 214, "form": "7.6", "points_per_game": "6.4", "goals_scored": 13, "assists": 11, "clean_sheets": 16, "minutes": 2610, "selected_by_percent": "31.5", "bonus": 36}, "9": {"name": "Salah", "team": "Liverpool", "position": "MID", "cost": "\u00a312.9m", "total_points": 244, "form": "8.8", "points_per_game": "7.2", "goals_scored": 18, "assists": 12, "clean_sheets": 14, "minutes": 2790, "selected_by_percent": "52.8", "bonus": 48}, "10": {"name": "Saka", "team": "Arsenal", "position": "MID", "cost": "\u00a310.0m", "total_points": 222, "form": "8.0", "points_per_game": "6.6", "goals_scored": 15, "assists": 14, "clean_sheets": 16, "minutes": 2880, "selected_by_percent": "44.1", "bonus": 40}, "11": {"name": "Palmer", "team": "Chelsea", "position": "MID", "cost": "\u00a310.5m", "total_points": 238, "form": "8.6", "points_per_game": "7.0", "goals_scored": 20, "assists": 10, "clean_sheets": 8, "minutes": 2970, "selected_by_percent": "47.3", "bonus": 44}, "12": {"name": "Haaland", "team": "Man City", "position": "FWD", "cost": "\u00a314.2m", "total_points": 260, "form": "9.2", "points_per_game": "7.8", "goals_scored": 27, "assists": 5, "clean_sheets": 10, "minutes": 2790, "selected_by_percent": "56.4", "bonus": 56}, "13": {"name": "Watkins", "team": "Aston Villa", "position": "FWD", "cost": "\u00a39.0m", "total_points": 212, "form": "7.8", "points_per_game": "6.4", "goals_scored": 19, "assists": 10, "clean_sheets": 8, "minutes": 2880, "selected_by_percent": "35.7", "bonus": 38}, "14": {"name": "Isak", "team": "Newcastle", "position": "FWD", "cost": "\u00a38.5m", "total_points": 196, "form": "7.2", "points_per_game": "6.0", "goals_scored": 21, "assists": 3, "clean_sheets": 12, "minutes": 2700, "selected_by_percent": "28.4", "bonus": 32}, "15": {"name": "Solanke", "team": "Bournemouth", "position": "FWD", "cost": "\u00a37.5m", "total_points": 162, "form": "5.8", "points_per_game": "4.9", "goals_scored": 15, "assists": 4, "clean_sheets": 4, "minutes": 2610, "selected_by_percent": "12.3", "bonus": 18}, "16": {"name": "Porro", "team": "Spurs", "position": "DEF", "cost": "\u00a35.6m", "total_points": 138, "form": "4.6", "points_per_game": "4.1", "goals_scored": 2, "assists": 6, "clean_sheets": 10, "minutes": 2700, "selected_by_percent": "14.2", "bonus": 14}, "17": {"name": "James", "team": "Chelsea", "position": "DEF", "cost": "\u00a35.8m", "total_points": 88, "form": "3.2", "points_per_game": "3.8", "goals_scored": 0, "assists": 3, "clean_sheets": 5, "minutes": 1440, "selected_by_percent": "8.1", "bonus": 8}, "18": {"name": "B.Fernandes", "team": "Man Utd", "position": "MID", "cost": "\u00a38.2m", "total_points": 168, "form": "5.8", "points_per_game": "5.0", "goals_scored": 8, "assists": 9, "clean_sheets": 6, "minutes": 2880, "selected_by_percent": "18.6", "bonus": 22}, "19": {"name": "Maddison", "team": "Spurs", "position": "MID", "cost": "\u00a37.8m", "total_points": 144, "form": "4.8", "points_per_game": "4.6", "goals_scored": 7, "assists": 10, "clean_sheets": 10, "minutes": 2430, "selected_by_percent": "12.3", "bonus": 18}, "20": {"name": "Trossard", "team": "Arsenal", "position": "MID", "cost": "\u00a37.2m", "total_points": 140, "form": "4.6", "points_per_game": "4.4", "goals_scored": 9, "assists": 5, "clean_sheets": 16, "minutes": 2340, "selected_by_percent": "10.8", "bonus": 14}, "21": {"name": "Jota", "team": "Liverpool", "position": "FWD", "cost": "\u00a37.6m", "total_points": 134, "form": "4.6", "points_per_game": "4.8", "goals_scored": 12, "assists": 2, "clean_sheets": 4, "minutes": 1980, "selected_by_percent": "9.4", "bonus": 14}, "22": {"name": "Toney", "team": "Brentford", "position": "FWD", "cost": "\u00a36.8m", "total_points": 82, "form": "3.4", "points_per_game": "4.1", "goals_scored": 7, "assists": 2, "clean_sheets": 2, "minutes": 1260, "selected_by_percent": "5.2", "bonus": 8}};
+    </script>
+  </main>
+  <footer class="site-footer">
+    <p>Built with Python + GitHub Actions · Data: FPL API · Hosted on GitHub Pages</p>
+    <p>For personal use only. Not affiliated with the Premier League or Fantasy Premier League.</p>
+  </footer>
+  <script src="assets/main.js"></script>
+</body>
+</html>
