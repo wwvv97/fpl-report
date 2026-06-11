@@ -10,7 +10,7 @@ This project turns raw Fantasy Premier League data into a clean, public web repo
 
 The report writes itself. A scheduled robot fetches the latest FPL data each morning, runs it through Python scripts that build the web pages, and publishes the result to the live site automatically.
 
-**Live site:** `https://<your-github-username>.github.io/fpl-report`
+**Live site:** `https://wwvv97.github.io/fpl-report/`
 
 ---
 
