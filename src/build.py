@@ -299,7 +299,7 @@ def build_teams(bootstrap: dict, meta: dict) -> str:
             "id": t["id"],
             "name": t["name"],
             "short": t["short_name"],
-            "strength": t["strength"],
+            "strength": t["strength"] or 0,
             "avg_pts": round(avg_pts, 1),
             "high_scorers": high_scorers,
             "blank_risk": blank_risk,
