@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from utils import load_json, safe_float, recent_form_score, format_cost, position_label
+from utils import load_json, safe_float, recent_form_score, format_cost, position_label  # noqa: E402
 
 BUDGET = 1000  # FPL stores costs as integers (£100.0m = 1000)
 

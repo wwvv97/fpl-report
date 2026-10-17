@@ -86,3 +86,58 @@ if (selA && selB) {
   selB.addEventListener('change', compare);
   compare();
 }
+
+// ── Team view ─────────────────────────────────────────────────────────────────
+const teamSelect = document.getElementById('team-select');
+
+function renderTeam(teamId) {
+  if (typeof TEAMS === 'undefined') return;
+  const t = TEAMS[teamId];
+  if (!t) return;
+
+  const statsEl = document.getElementById('team-stats');
+  statsEl.innerHTML = `
+    <div class="stat-card"><div class="stat-label">${t.name}</div><div class="stat-value">${t.played} played</div></div>
+    <div class="stat-card"><div class="stat-label">Wins</div><div class="stat-value">${t.win}</div></div>
+    <div class="stat-card"><div class="stat-label">Draws</div><div class="stat-value">${t.draw}</div></div>
+    <div class="stat-card"><div class="stat-label">Losses</div><div class="stat-value">${t.loss}</div></div>
+    <div class="stat-card">
+      <div class="stat-label">Goals scored</div>
+      <div class="stat-value">${t.gf}</div>
+      <div class="stat-sub">${t.gf_rank} of ${t.team_count}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Goals conceded</div>
+      <div class="stat-value">${t.ga}</div>
+      <div class="stat-sub">${t.ga_rank} of ${t.team_count}</div>
+    </div>`;
+
+  const heading = document.getElementById('team-roster-heading');
+  if (heading) heading.textContent = `${t.name} squad (sorted by minutes played)`;
+
+  const body = document.getElementById('team-roster-body');
+  body.innerHTML = t.roster.map(p => `
+    <tr>
+      <td class="player-name">
+        <span class="name">${p.name}</span>
+        <span class="pos-badge pos-${p.pos_num}">${p.position}</span>
+      </td>
+      <td>${p.age ?? '—'}</td>
+      <td>${p.minutes}</td>
+      <td>${p.starts}</td>
+      <td>${p.goals}</td>
+      <td>${p.assists}</td>
+      <td>${p.clean_sheets}</td>
+      <td>${p.yellow_cards}</td>
+      <td>${p.red_cards}</td>
+      <td>${p.xg}</td>
+      <td>${p.xa}</td>
+      <td>${p.ict_index}</td>
+      <td>${p.bonus}</td>
+    </tr>`).join('');
+}
+
+if (teamSelect) {
+  teamSelect.addEventListener('change', () => renderTeam(teamSelect.value));
+  renderTeam(typeof DEFAULT_TEAM !== 'undefined' ? DEFAULT_TEAM : teamSelect.value);
+}
