@@ -287,7 +287,6 @@ def build_players(bootstrap: dict, meta: dict) -> str:
 
 def build_teams(bootstrap: dict, meta: dict) -> str:
     players = bootstrap["elements"]
-    team_map = build_team_map(bootstrap["teams"])
 
     stats = []
     for t in bootstrap["teams"]:
@@ -301,7 +300,7 @@ def build_teams(bootstrap: dict, meta: dict) -> str:
             "id": t["id"],
             "name": t["name"],
             "short": t["short_name"],
-            "strength": t["strength"] or 0,
+            "strength": t["strength"],
             "avg_pts": round(avg_pts, 1),
             "high_scorers": high_scorers,
             "blank_risk": blank_risk,
@@ -313,7 +312,7 @@ def build_teams(bootstrap: dict, meta: dict) -> str:
       <tr>
         <td class="rank">{i+1}</td>
         <td><strong>{s['name']}</strong></td>
-        <td>{'★' * s['strength']}</td>
+        <td>{'★' * s['strength'] if s['strength'] is not None else '—'}</td>
         <td>{s['avg_pts']}</td>
         <td>{s['high_scorers']}</td>
         <td>{s['player_count']}</td>
