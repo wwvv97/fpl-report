@@ -354,6 +354,18 @@ def build_team_view(bootstrap: dict, fixtures: list, meta: dict) -> str:
     ga_order = sorted(teams, key=lambda t: records[t["id"]]["ga"])
     ga_rank = {t["id"]: i + 1 for i, t in enumerate(ga_order)}
 
+    # League table position, computed from fixture-derived records (points,
+    # then goal difference, then goals scored) rather than bootstrap's own
+    # `position` field, which is stuck at a stale default all season just
+    # like `strength` and played/win/draw/loss.
+    def table_sort_key(t: dict) -> tuple:
+        rec = records[t["id"]]
+        pts = rec["win"] * 3 + rec["draw"]
+        return (pts, rec["gf"] - rec["ga"], rec["gf"])
+
+    standings = sorted(teams, key=table_sort_key, reverse=True)
+    table_position = {t["id"]: i + 1 for i, t in enumerate(standings)}
+
     pos_num = {"GKP": 1, "DEF": 2, "MID": 3, "FWD": 4}
 
     team_data = {}
@@ -367,6 +379,7 @@ def build_team_view(bootstrap: dict, fixtures: list, meta: dict) -> str:
         )
         team_data[str(tid)] = {
             "name": t["name"],
+            "table_position": ordinal(table_position[tid]),
             "played": rec["played"],
             "win": rec["win"],
             "draw": rec["draw"],
@@ -393,6 +406,8 @@ def build_team_view(bootstrap: dict, fixtures: list, meta: dict) -> str:
                     "xa": p.get("expected_assists", "0.00"),
                     "ict_index": p.get("ict_index", "0.0"),
                     "bonus": p["bonus"],
+                    "total_points": p["total_points"],
+                    "selected_by_percent": p["selected_by_percent"],
                 }
                 for p in roster
             ],
@@ -426,6 +441,7 @@ def build_team_view(bootstrap: dict, fixtures: list, meta: dict) -> str:
               <th>Player</th><th>Age</th><th>Minutes</th><th>Starts</th>
               <th>Goals</th><th>Assists</th><th>CS</th><th>YC</th><th>RC</th>
               <th>xG</th><th>xA</th><th>ICT</th><th>Bonus</th>
+              <th>Total pts</th><th>Sel%</th>
             </tr>
           </thead>
           <tbody id="team-roster-body"></tbody>
@@ -935,6 +951,7 @@ function renderTeam(teamId) {
   const statsEl = document.getElementById('team-stats');
   statsEl.innerHTML = `
     <div class="stat-card"><div class="stat-label">${t.name}</div><div class="stat-value">${t.played} played</div></div>
+    <div class="stat-card"><div class="stat-label">Position</div><div class="stat-value">${t.table_position}</div></div>
     <div class="stat-card"><div class="stat-label">Wins</div><div class="stat-value">${t.win}</div></div>
     <div class="stat-card"><div class="stat-label">Draws</div><div class="stat-value">${t.draw}</div></div>
     <div class="stat-card"><div class="stat-label">Losses</div><div class="stat-value">${t.loss}</div></div>
@@ -971,6 +988,8 @@ function renderTeam(teamId) {
       <td>${p.xa}</td>
       <td>${p.ict_index}</td>
       <td>${p.bonus}</td>
+      <td>${p.total_points}</td>
+      <td>${p.selected_by_percent}%</td>
     </tr>`).join('');
 }
 
