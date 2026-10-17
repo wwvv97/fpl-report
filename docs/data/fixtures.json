@@ -23683,7 +23683,7 @@
     "finished_provisional": false,
     "id": 68,
     "kickoff_time": "2026-10-17T16:30:00Z",
-    "minutes": 12,
+    "minutes": 17,
     "provisional_start_time": false,
     "started": true,
     "team_a": 2,
@@ -23749,20 +23749,16 @@
             "element": 52
           },
           {
-            "value": 5,
+            "value": 6,
             "element": 41
           },
           {
-            "value": 5,
+            "value": 6,
             "element": 53
           },
           {
             "value": 4,
             "element": 47
-          },
-          {
-            "value": 3,
-            "element": 32
           },
           {
             "value": 3,
@@ -23778,15 +23774,15 @@
           },
           {
             "value": 3,
+            "element": 166
+          },
+          {
+            "value": 3,
             "element": 597
           },
           {
             "value": 3,
             "element": 611
-          },
-          {
-            "value": 2,
-            "element": 166
           }
         ],
         "h": [
@@ -23795,8 +23791,12 @@
             "element": 567
           },
           {
-            "value": 5,
+            "value": 6,
             "element": 449
+          },
+          {
+            "value": 5,
+            "element": 460
           },
           {
             "value": 3,
@@ -23816,19 +23816,15 @@
           },
           {
             "value": 3,
-            "element": 459
-          },
-          {
-            "value": 3,
-            "element": 460
-          },
-          {
-            "value": 3,
             "element": 464
           },
           {
             "value": 3,
             "element": 634
+          },
+          {
+            "value": 2,
+            "element": 459
           },
           {
             "value": 1,
@@ -23840,12 +23836,20 @@
         "identifier": "defensive_contribution",
         "a": [
           {
-            "value": 2,
+            "value": 3,
+            "element": 41
+          },
+          {
+            "value": 3,
             "element": 47
           },
           {
-            "value": 2,
+            "value": 3,
             "element": 52
+          },
+          {
+            "value": 2,
+            "element": 32
           },
           {
             "value": 2,
@@ -23857,37 +23861,33 @@
           },
           {
             "value": 1,
-            "element": 32
-          },
-          {
-            "value": 1,
             "element": 33
           },
           {
             "value": 1,
             "element": 37
-          },
-          {
-            "value": 1,
-            "element": 41
-          },
-          {
-            "value": 1,
-            "element": 166
           }
         ],
         "h": [
           {
-            "value": 1,
+            "value": 2,
             "element": 405
           },
           {
-            "value": 1,
+            "value": 2,
             "element": 447
           },
           {
-            "value": 1,
+            "value": 2,
             "element": 449
+          },
+          {
+            "value": 2,
+            "element": 458
+          },
+          {
+            "value": 1,
+            "element": 445
           },
           {
             "value": 1,
@@ -23895,7 +23895,7 @@
           },
           {
             "value": 1,
-            "element": 458
+            "element": 460
           },
           {
             "value": 1,

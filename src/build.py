@@ -9,11 +9,12 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from utils import (
+from utils import (  # noqa: E402
     load_json, build_team_map, top_n, fdr_label, fdr_color,
-    format_cost, position_label, safe_float
+    format_cost, position_label, safe_float,
+    calculate_age, ordinal, compute_team_records
 )
-from suggest import run as build_suggestion
+from suggest import run as build_suggestion  # noqa: E402
 
 ROOT = Path(__file__).parent.parent
 DOCS = ROOT / "docs"
@@ -32,12 +33,13 @@ def html_shell(title: str, active_page: str, body: str, meta: dict) -> str:
     updated = meta.get("last_updated", "")[:10]
 
     nav_items = [
-        ("index.html",    "Overview",  "overview"),
-        ("players.html",  "Players",   "players"),
-        ("teams.html",    "Teams",     "teams"),
-        ("fixtures.html", "Fixtures",  "fixtures"),
-        ("gameweek.html", "Gameweek",  "gameweek"),
-        ("wildcard.html", "Wildcard",  "wildcard"),
+        ("index.html", "Overview", "overview"),
+        ("players.html", "Players", "players"),
+        ("teams.html", "Teams", "teams"),
+        ("team.html", "Team view", "team_view"),
+        ("fixtures.html", "Fixtures", "fixtures"),
+        ("gameweek.html", "Gameweek", "gameweek"),
+        ("wildcard.html", "Wildcard", "wildcard"),
     ]
     nav_html = "\n".join(
         f'<a href="{href}" class="nav-link{" active" if key == active_page else ""}">{label}</a>'
@@ -103,8 +105,8 @@ def build_overview(bootstrap: dict, meta: dict) -> str:
           <td class="pts">{p['total_points']}</td>
         </tr>"""
 
-    top_pts_rows = "".join(player_row(p, i+1) for i, p in enumerate(top_players))
-    top_form_rows = "".join(player_row(p, i+1) for i, p in enumerate(top_form))
+    top_pts_rows = "".join(player_row(p, i + 1) for i, p in enumerate(top_players))
+    top_form_rows = "".join(player_row(p, i + 1) for i, p in enumerate(top_form))
 
     # Team stats
     team_pts = []
@@ -112,13 +114,17 @@ def build_overview(bootstrap: dict, meta: dict) -> str:
         team_players = [p for p in players if p["team"] == t["id"]]
         if team_players:
             avg = sum(p["total_points"] for p in team_players) / len(team_players)
-            team_pts.append({"name": t["name"], "short": t["short_name"],
-                              "avg": round(avg, 1), "count": len(team_players)})
+            team_pts.append({
+                "name": t["name"],
+                "short": t["short_name"],
+                "avg": round(avg, 1),
+                "count": len(team_players),
+            })
     team_pts.sort(key=lambda x: x["avg"], reverse=True)
 
     team_rows = "".join(f"""
         <tr>
-          <td class="rank">{i+1}</td>
+          <td class="rank">{i + 1}</td>
           <td>{t['name']}</td>
           <td>{t['avg']}</td>
           <td>{t['count']}</td>
@@ -206,7 +212,7 @@ def build_players(bootstrap: dict, meta: dict) -> str:
 
     # Player comparison options
     player_opts = "".join(
-        f'<option value="{p["id"]}">{p["web_name"]} ({teams.get(p["team"], {}).get("short_name","—")}) — {format_cost(p["now_cost"])}</option>'
+        f'<option value="{p["id"]}">{p["web_name"]} ({teams.get(p["team"], {}).get("short_name", "—")}) — {format_cost(p["now_cost"])}</option>'
         for p in sorted(players, key=lambda x: x["total_points"], reverse=True)
     )
 
@@ -285,7 +291,6 @@ def build_players(bootstrap: dict, meta: dict) -> str:
 
 def build_teams(bootstrap: dict, meta: dict) -> str:
     players = bootstrap["elements"]
-    team_map = build_team_map(bootstrap["teams"])
 
     stats = []
     for t in bootstrap["teams"]:
@@ -299,7 +304,7 @@ def build_teams(bootstrap: dict, meta: dict) -> str:
             "id": t["id"],
             "name": t["name"],
             "short": t["short_name"],
-            "strength": t["strength"] or 0,
+            "strength": t["strength"],
             "avg_pts": round(avg_pts, 1),
             "high_scorers": high_scorers,
             "blank_risk": blank_risk,
@@ -309,9 +314,9 @@ def build_teams(bootstrap: dict, meta: dict) -> str:
 
     rows = "".join(f"""
       <tr>
-        <td class="rank">{i+1}</td>
+        <td class="rank">{i + 1}</td>
         <td><strong>{s['name']}</strong></td>
-        <td>{'★' * s['strength']}</td>
+        <td>{'★' * s['strength'] if s['strength'] is not None else '—'}</td>
         <td>{s['avg_pts']}</td>
         <td>{s['high_scorers']}</td>
         <td>{s['player_count']}</td>
@@ -338,6 +343,104 @@ def build_teams(bootstrap: dict, meta: dict) -> str:
     return html_shell("Teams", "teams", body, meta)
 
 
+def build_team_view(bootstrap: dict, fixtures: list, meta: dict) -> str:
+    players = bootstrap["elements"]
+    teams = bootstrap["teams"]
+    records = compute_team_records(teams, fixtures)
+    team_count = len(teams)
+
+    gf_order = sorted(teams, key=lambda t: records[t["id"]]["gf"], reverse=True)
+    gf_rank = {t["id"]: i + 1 for i, t in enumerate(gf_order)}
+    ga_order = sorted(teams, key=lambda t: records[t["id"]]["ga"])
+    ga_rank = {t["id"]: i + 1 for i, t in enumerate(ga_order)}
+
+    pos_num = {"GKP": 1, "DEF": 2, "MID": 3, "FWD": 4}
+
+    team_data = {}
+    for t in teams:
+        tid = t["id"]
+        rec = records[tid]
+        roster = sorted(
+            (p for p in players if p["team"] == tid),
+            key=lambda p: p["minutes"],
+            reverse=True,
+        )
+        team_data[str(tid)] = {
+            "name": t["name"],
+            "played": rec["played"],
+            "win": rec["win"],
+            "draw": rec["draw"],
+            "loss": rec["loss"],
+            "gf": rec["gf"],
+            "ga": rec["ga"],
+            "gf_rank": ordinal(gf_rank[tid]),
+            "ga_rank": ordinal(ga_rank[tid]),
+            "team_count": team_count,
+            "roster": [
+                {
+                    "name": f"{p['first_name']} {p['second_name']}".strip(),
+                    "position": position_label(p["element_type"]),
+                    "pos_num": pos_num.get(position_label(p["element_type"]), 0),
+                    "age": calculate_age(p.get("birth_date")),
+                    "minutes": p["minutes"],
+                    "starts": p["starts"],
+                    "goals": p["goals_scored"],
+                    "assists": p["assists"],
+                    "clean_sheets": p["clean_sheets"],
+                    "yellow_cards": p["yellow_cards"],
+                    "red_cards": p["red_cards"],
+                    "xg": p.get("expected_goals", "0.00"),
+                    "xa": p.get("expected_assists", "0.00"),
+                    "ict_index": p.get("ict_index", "0.0"),
+                    "bonus": p["bonus"],
+                }
+                for p in roster
+            ],
+        }
+
+    default_id = next((t["id"] for t in teams if t["short_name"] == "MUN"), teams[0]["id"])
+    team_options = "".join(
+        f'<option value="{t["id"]}"{" selected" if t["id"] == default_id else ""}>{t["name"]}</option>'
+        for t in sorted(teams, key=lambda t: t["name"])
+    )
+
+    body = f"""
+    <div class="page-header">
+      <h1>Team view</h1>
+      <p class="page-desc">Pick a team to see its record, goal rankings, and full squad sorted by minutes played.</p>
+    </div>
+
+    <section class="card">
+      <label for="team-select" class="team-select-label">Team</label>
+      <select id="team-select">{team_options}</select>
+    </section>
+
+    <div class="stat-cards" id="team-stats"></div>
+
+    <section class="card">
+      <h2 id="team-roster-heading">Squad</h2>
+      <div class="table-wrap">
+        <table class="data-table sortable" id="team-roster-table">
+          <thead>
+            <tr>
+              <th>Player</th><th>Age</th><th>Minutes</th><th>Starts</th>
+              <th>Goals</th><th>Assists</th><th>CS</th><th>YC</th><th>RC</th>
+              <th>xG</th><th>xA</th><th>ICT</th><th>Bonus</th>
+            </tr>
+          </thead>
+          <tbody id="team-roster-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <script>
+    const TEAMS = {json.dumps(team_data)};
+    const DEFAULT_TEAM = "{default_id}";
+    </script>"""
+
+    return html_shell("Team view", "team_view", body, meta)
+
+
 def build_fixtures(bootstrap: dict, fixtures: list, meta: dict) -> str:
     team_map = build_team_map(bootstrap["teams"])
     events = {e["id"]: e["name"] for e in bootstrap["events"]}
@@ -356,7 +459,7 @@ def build_fixtures(bootstrap: dict, fixtures: list, meta: dict) -> str:
         gw_fixtures = gws[gw_id]
         gw_name = events.get(gw_id, f"Gameweek {gw_id}")
         is_current = gw_id == current_gw
-        label = f' <span class="badge badge-current">current</span>' if is_current else ""
+        label = ' <span class="badge badge-current">current</span>' if is_current else ""
 
         rows = ""
         for f in gw_fixtures:
@@ -369,13 +472,13 @@ def build_fixtures(bootstrap: dict, fixtures: list, meta: dict) -> str:
             rows += f"""
             <tr>
               <td>
-                <span class="team-name">{h.get('name','?')}</span>
+                <span class="team-name">{h.get('name', '?')}</span>
                 <span class="fdr-pill {fdr_color(h_fdr)}">{h_fdr}</span>
               </td>
               <td class="score-cell">{score}</td>
               <td>
                 <span class="fdr-pill {fdr_color(a_fdr)}">{a_fdr}</span>
-                <span class="team-name">{a.get('name','?')}</span>
+                <span class="team-name">{a.get('name', '?')}</span>
               </td>
               <td class="fixture-date">{date}</td>
             </tr>"""
@@ -425,7 +528,7 @@ def build_gameweek(bootstrap: dict, meta: dict) -> str:
             <span class="name">{p['web_name']}</span>
             <span class="pos-badge pos-{p['element_type']}">{position_label(p['element_type'])}</span>
           </td>
-          <td>{team.get('short_name','—')}</td>
+          <td>{team.get('short_name', '—')}</td>
           <td class="pts">{p.get('event_points', 0)}</td>
           <td>{p['form']}</td>
           <td>{p['points_per_game']}</td>
@@ -437,17 +540,17 @@ def build_gameweek(bootstrap: dict, meta: dict) -> str:
     body = f"""
     <div class="page-header">
       <h1>Gameweek summary</h1>
-      <p class="page-desc">What happened in {prev_gw.get('name','the last gameweek')} — standout performers, blanking differentials, and short-term momentum.</p>
+      <p class="page-desc">What happened in {prev_gw.get('name', 'the last gameweek')} — standout performers, blanking differentials, and short-term momentum.</p>
     </div>
 
     <div class="stat-cards">
       <div class="stat-card">
         <div class="stat-label">Average score</div>
-        <div class="stat-value">{prev_gw.get('average_entry_score','—')} pts</div>
+        <div class="stat-value">{prev_gw.get('average_entry_score', '—')} pts</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Highest score</div>
-        <div class="stat-value">{prev_gw.get('highest_score','—')} pts</div>
+        <div class="stat-value">{prev_gw.get('highest_score', '—')} pts</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Standout players (10+ pts)</div>
@@ -718,6 +821,11 @@ body {
 .compare-table .winner { font-weight: 700; color: var(--pitch); }
 .compare-table .header-a, .compare-table .header-b { font-weight: 700; font-size: 14px; color: var(--ink); }
 
+/* Team view */
+.team-select-label { font-size: 12px; color: var(--ink-faint); display: block; margin-bottom: 6px; }
+#team-select { width: 100%; max-width: 320px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; background: var(--surface); }
+.stat-sub { font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+
 /* Wildcard */
 .in-budget { color: #2e7d32; }
 .over-budget { color: #c62828; }
@@ -815,6 +923,61 @@ if (selA && selB) {
   selB.addEventListener('change', compare);
   compare();
 }
+
+// ── Team view ─────────────────────────────────────────────────────────────────
+const teamSelect = document.getElementById('team-select');
+
+function renderTeam(teamId) {
+  if (typeof TEAMS === 'undefined') return;
+  const t = TEAMS[teamId];
+  if (!t) return;
+
+  const statsEl = document.getElementById('team-stats');
+  statsEl.innerHTML = `
+    <div class="stat-card"><div class="stat-label">${t.name}</div><div class="stat-value">${t.played} played</div></div>
+    <div class="stat-card"><div class="stat-label">Wins</div><div class="stat-value">${t.win}</div></div>
+    <div class="stat-card"><div class="stat-label">Draws</div><div class="stat-value">${t.draw}</div></div>
+    <div class="stat-card"><div class="stat-label">Losses</div><div class="stat-value">${t.loss}</div></div>
+    <div class="stat-card">
+      <div class="stat-label">Goals scored</div>
+      <div class="stat-value">${t.gf}</div>
+      <div class="stat-sub">${t.gf_rank} of ${t.team_count}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Goals conceded</div>
+      <div class="stat-value">${t.ga}</div>
+      <div class="stat-sub">${t.ga_rank} of ${t.team_count}</div>
+    </div>`;
+
+  const heading = document.getElementById('team-roster-heading');
+  if (heading) heading.textContent = `${t.name} squad (sorted by minutes played)`;
+
+  const body = document.getElementById('team-roster-body');
+  body.innerHTML = t.roster.map(p => `
+    <tr>
+      <td class="player-name">
+        <span class="name">${p.name}</span>
+        <span class="pos-badge pos-${p.pos_num}">${p.position}</span>
+      </td>
+      <td>${p.age ?? '—'}</td>
+      <td>${p.minutes}</td>
+      <td>${p.starts}</td>
+      <td>${p.goals}</td>
+      <td>${p.assists}</td>
+      <td>${p.clean_sheets}</td>
+      <td>${p.yellow_cards}</td>
+      <td>${p.red_cards}</td>
+      <td>${p.xg}</td>
+      <td>${p.xa}</td>
+      <td>${p.ict_index}</td>
+      <td>${p.bonus}</td>
+    </tr>`).join('');
+}
+
+if (teamSelect) {
+  teamSelect.addEventListener('change', () => renderTeam(teamSelect.value));
+  renderTeam(typeof DEFAULT_TEAM !== 'undefined' ? DEFAULT_TEAM : teamSelect.value);
+}
 """
 
 
@@ -840,9 +1003,10 @@ def run() -> None:
     write_assets()
 
     pages = [
-        ("index.html",    build_overview(bootstrap, meta)),
-        ("players.html",  build_players(bootstrap, meta)),
-        ("teams.html",    build_teams(bootstrap, meta)),
+        ("index.html", build_overview(bootstrap, meta)),
+        ("players.html", build_players(bootstrap, meta)),
+        ("teams.html", build_teams(bootstrap, meta)),
+        ("team.html", build_team_view(bootstrap, fixtures, meta)),
         ("fixtures.html", build_fixtures(bootstrap, fixtures, meta)),
         ("gameweek.html", build_gameweek(bootstrap, meta)),
         ("wildcard.html", build_wildcard(bootstrap, meta)),
