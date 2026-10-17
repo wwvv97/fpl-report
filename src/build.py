@@ -11,7 +11,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from utils import (
     load_json, build_team_map, top_n, fdr_label, fdr_color,
-    format_cost, position_label, safe_float
+    format_cost, position_label, safe_float,
+    calculate_age, ordinal, compute_team_records
 )
 from suggest import run as build_suggestion
 
@@ -35,6 +36,7 @@ def html_shell(title: str, active_page: str, body: str, meta: dict) -> str:
         ("index.html",    "Overview",  "overview"),
         ("players.html",  "Players",   "players"),
         ("teams.html",    "Teams",     "teams"),
+        ("team.html",     "Team view", "team_view"),
         ("fixtures.html", "Fixtures",  "fixtures"),
         ("gameweek.html", "Gameweek",  "gameweek"),
         ("wildcard.html", "Wildcard",  "wildcard"),
@@ -336,6 +338,104 @@ def build_teams(bootstrap: dict, meta: dict) -> str:
     </section>"""
 
     return html_shell("Teams", "teams", body, meta)
+
+
+def build_team_view(bootstrap: dict, fixtures: list, meta: dict) -> str:
+    players = bootstrap["elements"]
+    teams = bootstrap["teams"]
+    records = compute_team_records(teams, fixtures)
+    team_count = len(teams)
+
+    gf_order = sorted(teams, key=lambda t: records[t["id"]]["gf"], reverse=True)
+    gf_rank = {t["id"]: i + 1 for i, t in enumerate(gf_order)}
+    ga_order = sorted(teams, key=lambda t: records[t["id"]]["ga"])
+    ga_rank = {t["id"]: i + 1 for i, t in enumerate(ga_order)}
+
+    pos_num = {"GKP": 1, "DEF": 2, "MID": 3, "FWD": 4}
+
+    team_data = {}
+    for t in teams:
+        tid = t["id"]
+        rec = records[tid]
+        roster = sorted(
+            (p for p in players if p["team"] == tid),
+            key=lambda p: p["minutes"],
+            reverse=True,
+        )
+        team_data[str(tid)] = {
+            "name": t["name"],
+            "played": rec["played"],
+            "win": rec["win"],
+            "draw": rec["draw"],
+            "loss": rec["loss"],
+            "gf": rec["gf"],
+            "ga": rec["ga"],
+            "gf_rank": ordinal(gf_rank[tid]),
+            "ga_rank": ordinal(ga_rank[tid]),
+            "team_count": team_count,
+            "roster": [
+                {
+                    "name": f"{p['first_name']} {p['second_name']}".strip(),
+                    "position": position_label(p["element_type"]),
+                    "pos_num": pos_num.get(position_label(p["element_type"]), 0),
+                    "age": calculate_age(p.get("birth_date")),
+                    "minutes": p["minutes"],
+                    "starts": p["starts"],
+                    "goals": p["goals_scored"],
+                    "assists": p["assists"],
+                    "clean_sheets": p["clean_sheets"],
+                    "yellow_cards": p["yellow_cards"],
+                    "red_cards": p["red_cards"],
+                    "xg": p.get("expected_goals", "0.00"),
+                    "xa": p.get("expected_assists", "0.00"),
+                    "ict_index": p.get("ict_index", "0.0"),
+                    "bonus": p["bonus"],
+                }
+                for p in roster
+            ],
+        }
+
+    default_id = next((t["id"] for t in teams if t["short_name"] == "MUN"), teams[0]["id"])
+    team_options = "".join(
+        f'<option value="{t["id"]}"{" selected" if t["id"] == default_id else ""}>{t["name"]}</option>'
+        for t in sorted(teams, key=lambda t: t["name"])
+    )
+
+    body = f"""
+    <div class="page-header">
+      <h1>Team view</h1>
+      <p class="page-desc">Pick a team to see its record, goal rankings, and full squad sorted by minutes played.</p>
+    </div>
+
+    <section class="card">
+      <label for="team-select" class="team-select-label">Team</label>
+      <select id="team-select">{team_options}</select>
+    </section>
+
+    <div class="stat-cards" id="team-stats"></div>
+
+    <section class="card">
+      <h2 id="team-roster-heading">Squad</h2>
+      <div class="table-wrap">
+        <table class="data-table sortable" id="team-roster-table">
+          <thead>
+            <tr>
+              <th>Player</th><th>Age</th><th>Minutes</th><th>Starts</th>
+              <th>Goals</th><th>Assists</th><th>CS</th><th>YC</th><th>RC</th>
+              <th>xG</th><th>xA</th><th>ICT</th><th>Bonus</th>
+            </tr>
+          </thead>
+          <tbody id="team-roster-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <script>
+    const TEAMS = {json.dumps(team_data)};
+    const DEFAULT_TEAM = "{default_id}";
+    </script>"""
+
+    return html_shell("Team view", "team_view", body, meta)
 
 
 def build_fixtures(bootstrap: dict, fixtures: list, meta: dict) -> str:
@@ -718,6 +818,11 @@ body {
 .compare-table .winner { font-weight: 700; color: var(--pitch); }
 .compare-table .header-a, .compare-table .header-b { font-weight: 700; font-size: 14px; color: var(--ink); }
 
+/* Team view */
+.team-select-label { font-size: 12px; color: var(--ink-faint); display: block; margin-bottom: 6px; }
+#team-select { width: 100%; max-width: 320px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; background: var(--surface); }
+.stat-sub { font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+
 /* Wildcard */
 .in-budget { color: #2e7d32; }
 .over-budget { color: #c62828; }
@@ -815,6 +920,61 @@ if (selA && selB) {
   selB.addEventListener('change', compare);
   compare();
 }
+
+// ── Team view ─────────────────────────────────────────────────────────────────
+const teamSelect = document.getElementById('team-select');
+
+function renderTeam(teamId) {
+  if (typeof TEAMS === 'undefined') return;
+  const t = TEAMS[teamId];
+  if (!t) return;
+
+  const statsEl = document.getElementById('team-stats');
+  statsEl.innerHTML = `
+    <div class="stat-card"><div class="stat-label">${t.name}</div><div class="stat-value">${t.played} played</div></div>
+    <div class="stat-card"><div class="stat-label">Wins</div><div class="stat-value">${t.win}</div></div>
+    <div class="stat-card"><div class="stat-label">Draws</div><div class="stat-value">${t.draw}</div></div>
+    <div class="stat-card"><div class="stat-label">Losses</div><div class="stat-value">${t.loss}</div></div>
+    <div class="stat-card">
+      <div class="stat-label">Goals scored</div>
+      <div class="stat-value">${t.gf}</div>
+      <div class="stat-sub">${t.gf_rank} of ${t.team_count}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Goals conceded</div>
+      <div class="stat-value">${t.ga}</div>
+      <div class="stat-sub">${t.ga_rank} of ${t.team_count}</div>
+    </div>`;
+
+  const heading = document.getElementById('team-roster-heading');
+  if (heading) heading.textContent = `${t.name} squad (sorted by minutes played)`;
+
+  const body = document.getElementById('team-roster-body');
+  body.innerHTML = t.roster.map(p => `
+    <tr>
+      <td class="player-name">
+        <span class="name">${p.name}</span>
+        <span class="pos-badge pos-${p.pos_num}">${p.position}</span>
+      </td>
+      <td>${p.age ?? '—'}</td>
+      <td>${p.minutes}</td>
+      <td>${p.starts}</td>
+      <td>${p.goals}</td>
+      <td>${p.assists}</td>
+      <td>${p.clean_sheets}</td>
+      <td>${p.yellow_cards}</td>
+      <td>${p.red_cards}</td>
+      <td>${p.xg}</td>
+      <td>${p.xa}</td>
+      <td>${p.ict_index}</td>
+      <td>${p.bonus}</td>
+    </tr>`).join('');
+}
+
+if (teamSelect) {
+  teamSelect.addEventListener('change', () => renderTeam(teamSelect.value));
+  renderTeam(typeof DEFAULT_TEAM !== 'undefined' ? DEFAULT_TEAM : teamSelect.value);
+}
 """
 
 
@@ -843,6 +1003,7 @@ def run() -> None:
         ("index.html",    build_overview(bootstrap, meta)),
         ("players.html",  build_players(bootstrap, meta)),
         ("teams.html",    build_teams(bootstrap, meta)),
+        ("team.html",     build_team_view(bootstrap, fixtures, meta)),
         ("fixtures.html", build_fixtures(bootstrap, fixtures, meta)),
         ("gameweek.html", build_gameweek(bootstrap, meta)),
         ("wildcard.html", build_wildcard(bootstrap, meta)),
