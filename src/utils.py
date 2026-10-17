@@ -4,6 +4,7 @@ Shared helper functions used by build.py and suggest.py.
 """
 
 import json
+from datetime import date, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
@@ -58,6 +59,63 @@ def top_n(items: list, key: str, n: int = 10, reverse: bool = True) -> list:
 def build_team_map(teams: list) -> dict:
     """Build a dict of team_id → team dict for fast lookups."""
     return {t["id"]: t for t in teams}
+
+
+def calculate_age(birth_date: str | None, as_of: date | None = None) -> int | None:
+    """Return a player's age in years from their birth_date (YYYY-MM-DD), or None if unknown."""
+    if not birth_date:
+        return None
+    try:
+        bd = datetime.strptime(birth_date, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return None
+    ref = as_of or date.today()
+    return ref.year - bd.year - ((ref.month, ref.day) < (bd.month, bd.day))
+
+
+def ordinal(n: int) -> str:
+    """Return the ordinal form of an integer, e.g. 1 -> '1st', 3 -> '3rd', 12 -> '12th'."""
+    if 10 <= n % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
+
+
+def compute_team_records(teams: list, fixtures: list) -> dict:
+    """
+    Compute matches played, wins, draws, losses, goals for/against per team
+    from finished fixtures. The bootstrap `teams` payload's own played/win/
+    draw/loss fields are unreliable (observed stuck at 0 all season), so
+    fixtures are the source of truth here.
+    """
+    records = {
+        t["id"]: {"played": 0, "win": 0, "draw": 0, "loss": 0, "gf": 0, "ga": 0}
+        for t in teams
+    }
+    for f in fixtures:
+        if not f.get("finished"):
+            continue
+        h, a = f.get("team_h"), f.get("team_a")
+        hs, as_ = f.get("team_h_score"), f.get("team_a_score")
+        if h not in records or a not in records or hs is None or as_ is None:
+            continue
+        records[h]["played"] += 1
+        records[a]["played"] += 1
+        records[h]["gf"] += hs
+        records[h]["ga"] += as_
+        records[a]["gf"] += as_
+        records[a]["ga"] += hs
+        if hs > as_:
+            records[h]["win"] += 1
+            records[a]["loss"] += 1
+        elif hs < as_:
+            records[a]["win"] += 1
+            records[h]["loss"] += 1
+        else:
+            records[h]["draw"] += 1
+            records[a]["draw"] += 1
+    return records
 
 
 def recent_form_score(player: dict) -> float:
