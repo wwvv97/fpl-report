@@ -23683,7 +23683,7 @@
     "finished_provisional": false,
     "id": 68,
     "kickoff_time": "2026-10-17T16:30:00Z",
-    "minutes": 17,
+    "minutes": 21,
     "provisional_start_time": false,
     "started": true,
     "team_a": 2,
@@ -23719,7 +23719,16 @@
       {
         "identifier": "yellow_cards",
         "a": [],
-        "h": []
+        "h": [
+          {
+            "value": 1,
+            "element": 447
+          },
+          {
+            "value": 1,
+            "element": 458
+          }
+        ]
       },
       {
         "identifier": "red_cards",
@@ -23738,8 +23747,26 @@
       },
       {
         "identifier": "bonus",
-        "a": [],
-        "h": []
+        "a": [
+          {
+            "value": 3,
+            "element": 52
+          },
+          {
+            "value": 1,
+            "element": 53
+          }
+        ],
+        "h": [
+          {
+            "value": 2,
+            "element": 449
+          },
+          {
+            "value": 1,
+            "element": 567
+          }
+        ]
       },
       {
         "identifier": "bps",
@@ -23749,16 +23776,16 @@
             "element": 52
           },
           {
+            "value": 7,
+            "element": 53
+          },
+          {
             "value": 6,
             "element": 41
           },
           {
-            "value": 6,
-            "element": 53
-          },
-          {
             "value": 4,
-            "element": 47
+            "element": 54
           },
           {
             "value": 3,
@@ -23770,7 +23797,7 @@
           },
           {
             "value": 3,
-            "element": 54
+            "element": 47
           },
           {
             "value": 3,
@@ -23787,16 +23814,24 @@
         ],
         "h": [
           {
+            "value": 8,
+            "element": 449
+          },
+          {
             "value": 7,
             "element": 567
           },
           {
-            "value": 6,
-            "element": 449
-          },
-          {
             "value": 5,
             "element": 460
+          },
+          {
+            "value": 4,
+            "element": 453
+          },
+          {
+            "value": 3,
+            "element": 405
           },
           {
             "value": 3,
@@ -23804,31 +23839,19 @@
           },
           {
             "value": 3,
-            "element": 447
-          },
-          {
-            "value": 3,
-            "element": 453
-          },
-          {
-            "value": 3,
-            "element": 458
-          },
-          {
-            "value": 3,
             "element": 464
-          },
-          {
-            "value": 3,
-            "element": 634
           },
           {
             "value": 2,
             "element": 459
           },
           {
-            "value": 1,
-            "element": 405
+            "value": 2,
+            "element": 634
+          },
+          {
+            "value": -1,
+            "element": 458
           }
         ]
       },
@@ -23836,8 +23859,12 @@
         "identifier": "defensive_contribution",
         "a": [
           {
-            "value": 3,
+            "value": 4,
             "element": 41
+          },
+          {
+            "value": 3,
+            "element": 32
           },
           {
             "value": 3,
@@ -23849,7 +23876,7 @@
           },
           {
             "value": 2,
-            "element": 32
+            "element": 37
           },
           {
             "value": 2,
@@ -23862,24 +23889,20 @@
           {
             "value": 1,
             "element": 33
-          },
-          {
-            "value": 1,
-            "element": 37
           }
         ],
         "h": [
           {
-            "value": 2,
+            "value": 4,
             "element": 405
+          },
+          {
+            "value": 3,
+            "element": 449
           },
           {
             "value": 2,
             "element": 447
-          },
-          {
-            "value": 2,
-            "element": 449
           },
           {
             "value": 2,
