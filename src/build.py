@@ -399,6 +399,7 @@ def build_team_view(bootstrap: dict, fixtures: list, meta: dict) -> str:
                     "starts": p["starts"],
                     "goals": p["goals_scored"],
                     "assists": p["assists"],
+                    "goals_plus_assists": p["goals_scored"] + p["assists"],
                     "clean_sheets": p["clean_sheets"],
                     "yellow_cards": p["yellow_cards"],
                     "red_cards": p["red_cards"],
@@ -439,7 +440,7 @@ def build_team_view(bootstrap: dict, fixtures: list, meta: dict) -> str:
           <thead>
             <tr>
               <th>Player</th><th>Age</th><th>Minutes</th><th>Starts</th>
-              <th>Goals</th><th>Assists</th><th>CS</th><th>YC</th><th>RC</th>
+              <th>Goals</th><th>Assists</th><th>G+A</th><th>CS</th><th>YC</th><th>RC</th>
               <th>xG</th><th>xA</th><th>ICT</th><th>Bonus</th>
               <th>Total pts</th><th>Sel%</th>
             </tr>
@@ -841,6 +842,10 @@ body {
 .team-select-label { font-size: 12px; color: var(--ink-faint); display: block; margin-bottom: 6px; }
 #team-select { width: 100%; max-width: 320px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; background: var(--surface); }
 .stat-sub { font-size: 12px; color: var(--ink-faint); margin-top: 4px; }
+/* Team view has 7 KPI cards — narrower minmax than the default .stat-cards
+   keeps them on one row instead of wrapping 6+1 at normal page widths. */
+#team-stats { grid-template-columns: repeat(auto-fit, minmax(124px, 1fr)); }
+#team-stats .stat-value { font-size: 20px; }
 
 /* Wildcard */
 .in-budget { color: #2e7d32; }
@@ -981,6 +986,7 @@ function renderTeam(teamId) {
       <td>${p.starts}</td>
       <td>${p.goals}</td>
       <td>${p.assists}</td>
+      <td>${p.goals_plus_assists}</td>
       <td>${p.clean_sheets}</td>
       <td>${p.yellow_cards}</td>
       <td>${p.red_cards}</td>
