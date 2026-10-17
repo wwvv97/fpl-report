@@ -128,6 +128,7 @@ function renderTeam(teamId) {
       <td>${p.starts}</td>
       <td>${p.goals}</td>
       <td>${p.assists}</td>
+      <td>${p.goals_plus_assists}</td>
       <td>${p.clean_sheets}</td>
       <td>${p.yellow_cards}</td>
       <td>${p.red_cards}</td>
