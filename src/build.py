@@ -9,12 +9,12 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from utils import (
+from utils import (  # noqa: E402
     load_json, build_team_map, top_n, fdr_label, fdr_color,
     format_cost, position_label, safe_float,
     calculate_age, ordinal, compute_team_records
 )
-from suggest import run as build_suggestion
+from suggest import run as build_suggestion  # noqa: E402
 
 ROOT = Path(__file__).parent.parent
 DOCS = ROOT / "docs"
@@ -33,13 +33,13 @@ def html_shell(title: str, active_page: str, body: str, meta: dict) -> str:
     updated = meta.get("last_updated", "")[:10]
 
     nav_items = [
-        ("index.html",    "Overview",  "overview"),
-        ("players.html",  "Players",   "players"),
-        ("teams.html",    "Teams",     "teams"),
-        ("team.html",     "Team view", "team_view"),
-        ("fixtures.html", "Fixtures",  "fixtures"),
-        ("gameweek.html", "Gameweek",  "gameweek"),
-        ("wildcard.html", "Wildcard",  "wildcard"),
+        ("index.html", "Overview", "overview"),
+        ("players.html", "Players", "players"),
+        ("teams.html", "Teams", "teams"),
+        ("team.html", "Team view", "team_view"),
+        ("fixtures.html", "Fixtures", "fixtures"),
+        ("gameweek.html", "Gameweek", "gameweek"),
+        ("wildcard.html", "Wildcard", "wildcard"),
     ]
     nav_html = "\n".join(
         f'<a href="{href}" class="nav-link{" active" if key == active_page else ""}">{label}</a>'
@@ -105,8 +105,8 @@ def build_overview(bootstrap: dict, meta: dict) -> str:
           <td class="pts">{p['total_points']}</td>
         </tr>"""
 
-    top_pts_rows = "".join(player_row(p, i+1) for i, p in enumerate(top_players))
-    top_form_rows = "".join(player_row(p, i+1) for i, p in enumerate(top_form))
+    top_pts_rows = "".join(player_row(p, i + 1) for i, p in enumerate(top_players))
+    top_form_rows = "".join(player_row(p, i + 1) for i, p in enumerate(top_form))
 
     # Team stats
     team_pts = []
@@ -114,13 +114,17 @@ def build_overview(bootstrap: dict, meta: dict) -> str:
         team_players = [p for p in players if p["team"] == t["id"]]
         if team_players:
             avg = sum(p["total_points"] for p in team_players) / len(team_players)
-            team_pts.append({"name": t["name"], "short": t["short_name"],
-                              "avg": round(avg, 1), "count": len(team_players)})
+            team_pts.append({
+                "name": t["name"],
+                "short": t["short_name"],
+                "avg": round(avg, 1),
+                "count": len(team_players),
+            })
     team_pts.sort(key=lambda x: x["avg"], reverse=True)
 
     team_rows = "".join(f"""
         <tr>
-          <td class="rank">{i+1}</td>
+          <td class="rank">{i + 1}</td>
           <td>{t['name']}</td>
           <td>{t['avg']}</td>
           <td>{t['count']}</td>
@@ -208,7 +212,7 @@ def build_players(bootstrap: dict, meta: dict) -> str:
 
     # Player comparison options
     player_opts = "".join(
-        f'<option value="{p["id"]}">{p["web_name"]} ({teams.get(p["team"], {}).get("short_name","—")}) — {format_cost(p["now_cost"])}</option>'
+        f'<option value="{p["id"]}">{p["web_name"]} ({teams.get(p["team"], {}).get("short_name", "—")}) — {format_cost(p["now_cost"])}</option>'
         for p in sorted(players, key=lambda x: x["total_points"], reverse=True)
     )
 
@@ -310,7 +314,7 @@ def build_teams(bootstrap: dict, meta: dict) -> str:
 
     rows = "".join(f"""
       <tr>
-        <td class="rank">{i+1}</td>
+        <td class="rank">{i + 1}</td>
         <td><strong>{s['name']}</strong></td>
         <td>{'★' * s['strength'] if s['strength'] is not None else '—'}</td>
         <td>{s['avg_pts']}</td>
@@ -455,7 +459,7 @@ def build_fixtures(bootstrap: dict, fixtures: list, meta: dict) -> str:
         gw_fixtures = gws[gw_id]
         gw_name = events.get(gw_id, f"Gameweek {gw_id}")
         is_current = gw_id == current_gw
-        label = f' <span class="badge badge-current">current</span>' if is_current else ""
+        label = ' <span class="badge badge-current">current</span>' if is_current else ""
 
         rows = ""
         for f in gw_fixtures:
@@ -468,13 +472,13 @@ def build_fixtures(bootstrap: dict, fixtures: list, meta: dict) -> str:
             rows += f"""
             <tr>
               <td>
-                <span class="team-name">{h.get('name','?')}</span>
+                <span class="team-name">{h.get('name', '?')}</span>
                 <span class="fdr-pill {fdr_color(h_fdr)}">{h_fdr}</span>
               </td>
               <td class="score-cell">{score}</td>
               <td>
                 <span class="fdr-pill {fdr_color(a_fdr)}">{a_fdr}</span>
-                <span class="team-name">{a.get('name','?')}</span>
+                <span class="team-name">{a.get('name', '?')}</span>
               </td>
               <td class="fixture-date">{date}</td>
             </tr>"""
@@ -524,7 +528,7 @@ def build_gameweek(bootstrap: dict, meta: dict) -> str:
             <span class="name">{p['web_name']}</span>
             <span class="pos-badge pos-{p['element_type']}">{position_label(p['element_type'])}</span>
           </td>
-          <td>{team.get('short_name','—')}</td>
+          <td>{team.get('short_name', '—')}</td>
           <td class="pts">{p.get('event_points', 0)}</td>
           <td>{p['form']}</td>
           <td>{p['points_per_game']}</td>
@@ -536,17 +540,17 @@ def build_gameweek(bootstrap: dict, meta: dict) -> str:
     body = f"""
     <div class="page-header">
       <h1>Gameweek summary</h1>
-      <p class="page-desc">What happened in {prev_gw.get('name','the last gameweek')} — standout performers, blanking differentials, and short-term momentum.</p>
+      <p class="page-desc">What happened in {prev_gw.get('name', 'the last gameweek')} — standout performers, blanking differentials, and short-term momentum.</p>
     </div>
 
     <div class="stat-cards">
       <div class="stat-card">
         <div class="stat-label">Average score</div>
-        <div class="stat-value">{prev_gw.get('average_entry_score','—')} pts</div>
+        <div class="stat-value">{prev_gw.get('average_entry_score', '—')} pts</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Highest score</div>
-        <div class="stat-value">{prev_gw.get('highest_score','—')} pts</div>
+        <div class="stat-value">{prev_gw.get('highest_score', '—')} pts</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Standout players (10+ pts)</div>
@@ -999,10 +1003,10 @@ def run() -> None:
     write_assets()
 
     pages = [
-        ("index.html",    build_overview(bootstrap, meta)),
-        ("players.html",  build_players(bootstrap, meta)),
-        ("teams.html",    build_teams(bootstrap, meta)),
-        ("team.html",     build_team_view(bootstrap, fixtures, meta)),
+        ("index.html", build_overview(bootstrap, meta)),
+        ("players.html", build_players(bootstrap, meta)),
+        ("teams.html", build_teams(bootstrap, meta)),
+        ("team.html", build_team_view(bootstrap, fixtures, meta)),
         ("fixtures.html", build_fixtures(bootstrap, fixtures, meta)),
         ("gameweek.html", build_gameweek(bootstrap, meta)),
         ("wildcard.html", build_wildcard(bootstrap, meta)),
