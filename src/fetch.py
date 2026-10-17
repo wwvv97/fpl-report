@@ -5,7 +5,6 @@ Falls back to mock data automatically when the API is unavailable.
 """
 
 import json
-import os
 import sys
 import time
 import urllib.request
