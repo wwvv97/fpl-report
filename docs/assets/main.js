@@ -98,6 +98,7 @@ function renderTeam(teamId) {
   const statsEl = document.getElementById('team-stats');
   statsEl.innerHTML = `
     <div class="stat-card"><div class="stat-label">${t.name}</div><div class="stat-value">${t.played} played</div></div>
+    <div class="stat-card"><div class="stat-label">Position</div><div class="stat-value">${t.table_position}</div></div>
     <div class="stat-card"><div class="stat-label">Wins</div><div class="stat-value">${t.win}</div></div>
     <div class="stat-card"><div class="stat-label">Draws</div><div class="stat-value">${t.draw}</div></div>
     <div class="stat-card"><div class="stat-label">Losses</div><div class="stat-value">${t.loss}</div></div>
@@ -134,6 +135,8 @@ function renderTeam(teamId) {
       <td>${p.xa}</td>
       <td>${p.ict_index}</td>
       <td>${p.bonus}</td>
+      <td>${p.total_points}</td>
+      <td>${p.selected_by_percent}%</td>
     </tr>`).join('');
 }
 
