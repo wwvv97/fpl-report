@@ -22733,7 +22733,7 @@
             "element": 87
           },
           {
-            "value": 14,
+            "value": 11,
             "element": 106
           },
           {
@@ -22765,7 +22765,11 @@
             "element": 565
           },
           {
-            "value": 5,
+            "value": 4,
+            "element": 98
+          },
+          {
+            "value": 3,
             "element": 94
           },
           {
@@ -22775,10 +22779,6 @@
           {
             "value": 2,
             "element": 97
-          },
-          {
-            "value": 2,
-            "element": 98
           },
           {
             "value": 1,
@@ -22794,12 +22794,12 @@
         "identifier": "defensive_contribution",
         "a": [
           {
-            "value": 14,
-            "element": 362
+            "value": 13,
+            "element": 356
           },
           {
             "value": 13,
-            "element": 356
+            "element": 362
           },
           {
             "value": 9,
@@ -22814,12 +22814,12 @@
             "element": 358
           },
           {
-            "value": 6,
-            "element": 368
+            "value": 7,
+            "element": 375
           },
           {
             "value": 6,
-            "element": 375
+            "element": 368
           },
           {
             "value": 5,
@@ -22852,7 +22852,7 @@
             "element": 87
           },
           {
-            "value": 10,
+            "value": 11,
             "element": 98
           },
           {
@@ -22876,12 +22876,12 @@
             "element": 88
           },
           {
-            "value": 6,
-            "element": 94
+            "value": 5,
+            "element": 86
           },
           {
             "value": 5,
-            "element": 86
+            "element": 94
           },
           {
             "value": 4,
@@ -23037,12 +23037,12 @@
             "element": 286
           },
           {
-            "value": 10,
-            "element": 642
+            "value": 12,
+            "element": 277
           },
           {
-            "value": 8,
-            "element": 277
+            "value": 10,
+            "element": 642
           },
           {
             "value": 7,
@@ -23115,7 +23115,7 @@
             "element": 257
           },
           {
-            "value": 24,
+            "value": 22,
             "element": 650
           },
           {
@@ -23680,10 +23680,10 @@
     "code": 2645262,
     "event": 7,
     "finished": false,
-    "finished_provisional": false,
+    "finished_provisional": true,
     "id": 68,
     "kickoff_time": "2026-10-17T16:30:00Z",
-    "minutes": 55,
+    "minutes": 90,
     "provisional_start_time": false,
     "started": true,
     "team_a": 2,
@@ -23745,11 +23745,23 @@
           },
           {
             "value": 1,
+            "element": 445
+          },
+          {
+            "value": 1,
             "element": 447
           },
           {
             "value": 1,
             "element": 458
+          },
+          {
+            "value": 1,
+            "element": 464
+          },
+          {
+            "value": 1,
+            "element": 465
           }
         ]
       },
@@ -23768,7 +23780,7 @@
         ],
         "h": [
           {
-            "value": 1,
+            "value": 2,
             "element": 567
           }
         ]
@@ -23782,11 +23794,15 @@
           },
           {
             "value": 2,
-            "element": 41
+            "element": 597
           },
           {
             "value": 1,
-            "element": 54
+            "element": 33
+          },
+          {
+            "value": 1,
+            "element": 37
           }
         ],
         "h": []
@@ -23795,28 +23811,52 @@
         "identifier": "bps",
         "a": [
           {
-            "value": 31,
+            "value": 35,
             "element": 53
           },
           {
-            "value": 18,
-            "element": 41
-          },
-          {
-            "value": 14,
-            "element": 54
-          },
-          {
-            "value": 11,
+            "value": 27,
             "element": 597
           },
           {
-            "value": 9,
+            "value": 26,
+            "element": 33
+          },
+          {
+            "value": 26,
             "element": 37
           },
           {
-            "value": 8,
+            "value": 24,
+            "element": 41
+          },
+          {
+            "value": 23,
+            "element": 54
+          },
+          {
+            "value": 21,
             "element": 47
+          },
+          {
+            "value": 20,
+            "element": 32
+          },
+          {
+            "value": 19,
+            "element": 611
+          },
+          {
+            "value": 12,
+            "element": 45
+          },
+          {
+            "value": 11,
+            "element": 46
+          },
+          {
+            "value": 10,
+            "element": 166
           },
           {
             "value": 7,
@@ -23824,37 +23864,57 @@
           },
           {
             "value": 5,
-            "element": 166
+            "element": 34
           },
           {
-            "value": 4,
-            "element": 33
+            "value": 5,
+            "element": 618
           },
           {
-            "value": 4,
-            "element": 45
-          },
-          {
-            "value": 2,
-            "element": 611
-          },
-          {
-            "value": 1,
-            "element": 32
+            "value": 3,
+            "element": 631
           }
         ],
         "h": [
           {
-            "value": 11,
+            "value": 17,
             "element": 449
           },
           {
-            "value": 6,
+            "value": 17,
+            "element": 459
+          },
+          {
+            "value": 13,
+            "element": 458
+          },
+          {
+            "value": 12,
+            "element": 453
+          },
+          {
+            "value": 11,
             "element": 405
           },
           {
+            "value": 10,
+            "element": 567
+          },
+          {
+            "value": 8,
+            "element": 445
+          },
+          {
             "value": 6,
-            "element": 453
+            "element": 447
+          },
+          {
+            "value": 6,
+            "element": 634
+          },
+          {
+            "value": 5,
+            "element": 448
           },
           {
             "value": 5,
@@ -23862,27 +23922,15 @@
           },
           {
             "value": 5,
-            "element": 634
+            "element": 461
           },
           {
-            "value": 4,
-            "element": 567
-          },
-          {
-            "value": 3,
-            "element": 447
-          },
-          {
-            "value": 3,
+            "value": 1,
             "element": 464
           },
           {
-            "value": 2,
-            "element": 445
-          },
-          {
-            "value": 2,
-            "element": 459
+            "value": -2,
+            "element": 465
           }
         ]
       },
@@ -23890,16 +23938,36 @@
         "identifier": "defensive_contribution",
         "a": [
           {
-            "value": 9,
-            "element": 41
-          },
-          {
-            "value": 9,
+            "value": 17,
             "element": 47
           },
           {
-            "value": 6,
+            "value": 12,
+            "element": 37
+          },
+          {
+            "value": 11,
+            "element": 41
+          },
+          {
+            "value": 10,
             "element": 32
+          },
+          {
+            "value": 10,
+            "element": 45
+          },
+          {
+            "value": 9,
+            "element": 618
+          },
+          {
+            "value": 7,
+            "element": 33
+          },
+          {
+            "value": 6,
+            "element": 54
           },
           {
             "value": 5,
@@ -23907,57 +23975,65 @@
           },
           {
             "value": 4,
-            "element": 33
+            "element": 34
           },
           {
             "value": 4,
-            "element": 37
+            "element": 46
           },
           {
-            "value": 3,
-            "element": 54
-          },
-          {
-            "value": 2,
-            "element": 45
-          },
-          {
-            "value": 2,
-            "element": 53
-          },
-          {
-            "value": 2,
+            "value": 4,
             "element": 611
           },
           {
-            "value": 1,
+            "value": 4,
+            "element": 631
+          },
+          {
+            "value": 3,
+            "element": 53
+          },
+          {
+            "value": 3,
             "element": 166
           }
         ],
         "h": [
           {
-            "value": 7,
+            "value": 12,
             "element": 405
           },
           {
-            "value": 6,
-            "element": 449
+            "value": 11,
+            "element": 459
           },
           {
-            "value": 5,
-            "element": 445
-          },
-          {
-            "value": 5,
+            "value": 10,
             "element": 447
           },
           {
-            "value": 3,
+            "value": 10,
+            "element": 449
+          },
+          {
+            "value": 9,
+            "element": 445
+          },
+          {
+            "value": 6,
             "element": 458
           },
           {
-            "value": 2,
+            "value": 4,
+            "element": 464
+          },
+          {
+            "value": 3,
             "element": 453
+          },
+          {
+            "value": 3,
+            "element": 461
           },
           {
             "value": 2,
@@ -23965,15 +24041,11 @@
           },
           {
             "value": 2,
-            "element": 464
-          },
-          {
-            "value": 2,
             "element": 634
           },
           {
             "value": 1,
-            "element": 459
+            "element": 448
           }
         ]
       }
